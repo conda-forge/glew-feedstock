@@ -15,7 +15,7 @@ source:
     - CMakeLists.patch  # [win and vc<14]
 
 build:
-  number: 0
+  number: 1000
 
 requirements:
   build:
