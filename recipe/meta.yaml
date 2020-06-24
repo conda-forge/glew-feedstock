@@ -14,7 +14,7 @@ source:
     - CMakeLists.patch  # [win and vc<14]
 
 build:
-  number: 0
+  number: 1
   run_exports:
     - {{ pin_subpackage('glew', max_pin='x.x') }}
 
@@ -79,7 +79,7 @@ test:
 
 about:
   home: http://glew.sourceforge.net/
-  license: BSD 3-Clause
+  license: BSD-3-Clause
   license_file: LICENSE.txt
   summary: "The OpenGL Extension Wrangler Library"
   description: |
