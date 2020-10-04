@@ -1,4 +1,9 @@
 #!/bin/bash
+if [ "$(uname)" == "Linux" ]; then
+    # Required to avoid "warning: libexpat.so.1, needed by ...libGL.so" and subsequent undefined references
+    export LDFLAGS="${LDFLAGS} -Wl,--allow-shlib-undefined"
+fi
+
 cd build
 cmake -DCMAKE_INSTALL_PREFIX:PATH="${PREFIX}" -DCMAKE_INSTALL_LIBDIR="lib" ./cmake
 make -j${CPU_COUNT}
