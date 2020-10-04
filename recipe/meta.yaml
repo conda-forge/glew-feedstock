@@ -23,8 +23,8 @@ requirements:
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
     - cmake
-    - make  # [unix]
-    - pkg-config                     # [unix]
+    - make                               # [unix]
+    - pkg-config                         # [unix]
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
     - {{ cdt('libx11-devel') }}          # [linux]
     - {{ cdt('libxext-devel') }}         # [linux]
@@ -67,6 +67,7 @@ test:
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
     - cmake
+    - make                           # [unix]
     - {{ cdt('libselinux') }}        # [linux]
     - {{ cdt('libxcb') }}            # [linux]
     - {{ cdt('libxdamage') }}        # [linux]
