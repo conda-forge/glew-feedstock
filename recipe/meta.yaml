@@ -14,7 +14,7 @@ source:
     - CMakeLists.patch  # [win and vc<14]
 
 build:
-  number: 1
+  number: 2
   run_exports:
     - {{ pin_subpackage('glew', max_pin='x.x') }}
 
@@ -23,7 +23,8 @@ requirements:
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
     - cmake
-    - pkg-config                     # [unix]
+    - make                               # [unix]
+    - pkg-config                         # [unix]
     - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
     - {{ cdt('libx11-devel') }}          # [linux]
     - {{ cdt('libxext-devel') }}         # [linux]
@@ -66,6 +67,7 @@ test:
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
     - cmake
+    - make                           # [unix]
     - {{ cdt('libselinux') }}        # [linux]
     - {{ cdt('libxcb') }}            # [linux]
     - {{ cdt('libxdamage') }}        # [linux]
