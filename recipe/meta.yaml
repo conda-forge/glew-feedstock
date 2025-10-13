@@ -1,14 +1,11 @@
-{% set name = "glew" %}
 {% set version = "2.2.0" %}
-{% set dev_url = "https://github.com/nigels-com/glew" %}
 
 package:
-  name: {{ name|lower }}
+  name: glew
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.tgz
-  url: {{ dev_url }}/releases/download/{{ name }}-{{ version }}/{{ name }}-{{ version }}.tgz
+  url: https://github.com/nigels-com/glew/releases/download/glew-{{ version }}/glew-{{ version }}.tgz
   sha256: d4fc82893cfb00109578d0a1a2337fb8ca335b3ceccf97b97e5cc7f08e4353e1
   patches:
     - CMakeLists.patch  # [win and vc<14]
@@ -22,7 +19,6 @@ requirements:
   build:
     - {{ stdlib("c") }}
     - {{ compiler("c") }}
-    # - {{ compiler("cxx") }}
     - cmake
     - make                               # [unix]
     - pkg-config                         # [unix]
@@ -31,17 +27,6 @@ requirements:
     - libglu                         # [linux]
     - xorg-libx11                    # [linux]
     - xorg-xorgproto                 # [linux]
-    # - libxcb                         # [linux]
-    # - xorg-libxau                    # [linux]
-    # - xorg-libxfixes                 # [linux]
-    # - xorg-libxxf86vm                # [linux]
-    # - xorg-libxrandr                 # [linux]
-    # - xorg-libxdamage                # [linux]
-    # - xorg-libxi                     # [linux]
-    # - xorg-libxrender                # [linux]
-    # - xorg-libxext                   # [linux]
-    # - xorg-libxcomposite             # [linux]
-    # - xorg-libxcursor                # [linux]
   run:
     # you need the libglu headers at runtime, but not at compile time...
     - libglu                         # [linux]
@@ -51,8 +36,9 @@ requirements:
 # Tests require visual context not present on CIs
 test:
   requires:
-    - {{ compiler("c") }}
+    # Not sure why we need cxx...
     - {{ compiler("cxx") }}
+    - {{ compiler("c") }}
     - cmake
     - make                           # [unix]
     - libgl-devel                    # [linux]
@@ -76,7 +62,7 @@ about:
     which OpenGL extensions are supported on the target platform. OpenGL core and extension
     functionality is exposed in a single header file.
   doc_url: http://glew.sourceforge.net/basic.html
-  dev_url: {{ dev_url }}
+  dev_url: https://github.com/nigels-com/glew
 
 extra:
   recipe-maintainers:
