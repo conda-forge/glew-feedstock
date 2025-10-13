@@ -1,11 +1,11 @@
 #!/bin/bash
-if [ "$(uname)" == "Linux" ]; then
-    # Required to avoid "warning: libexpat.so.1, needed by ...libGL.so" and subsequent undefined references
-    export LDFLAGS="${LDFLAGS} -Wl,--allow-shlib-undefined"
-fi
-
+set -ex
 cd build
-cmake ${CMAKE_ARGS} -DCMAKE_INSTALL_PREFIX:PATH="${PREFIX}" -DCMAKE_INSTALL_LIBDIR="lib" ./cmake
+cmake ${CMAKE_ARGS} \
+    -DCMAKE_INSTALL_PREFIX:PATH="${PREFIX}" \
+    -DCMAKE_INSTALL_LIBDIR="lib" \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+    ./cmake
 make -j${CPU_COUNT}
 make install
 
