@@ -1,7 +1,11 @@
 #!/bin/bash
+set -ex
 mkdir build
 cd build
-cmake $RECIPE_DIR/test -DCMAKE_BUILD_TYPE=Debug
+cmake \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+    $RECIPE_DIR/test \
+    -DCMAKE_BUILD_TYPE=Debug
 make
 if [ "$(uname)" != "Darwin" ]; then
     # On OSX, when running with valgrind, the following error report is shown:
@@ -27,7 +31,3 @@ if [ "$(uname)" != "Darwin" ]; then
     # So as a conclusion, I can say that glewContextInit() does not work on OSX without a graphical context
     ./main
 fi
-
-# These executables fail with a non-0 return because there is no visual context available in CI
-visualinfo || true
-glewinfo || true

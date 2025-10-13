@@ -1,62 +1,34 @@
-{% set name = "glew" %}
-{% set version = "2.1.0" %}
-{% set dev_url = "https://github.com/nigels-com/glew" %}
+{% set version = "2.2.0" %}
 
 package:
-  name: {{ name|lower }}
+  name: glew
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.tgz
-  url: {{ dev_url }}/releases/download/{{ name }}-{{ version }}/{{ name }}-{{ version }}.tgz
-  sha256: 04de91e7e6763039bc11940095cd9c7f880baba82196a7765f727ac05a993c95
+  url: https://github.com/nigels-com/glew/releases/download/glew-{{ version }}/glew-{{ version }}.tgz
+  sha256: d4fc82893cfb00109578d0a1a2337fb8ca335b3ceccf97b97e5cc7f08e4353e1
   patches:
     - CMakeLists.patch  # [win and vc<14]
 
 build:
-  number: 2
+  number: 0
   run_exports:
     - {{ pin_subpackage('glew', max_pin='x.x') }}
 
 requirements:
   build:
+    - {{ stdlib("c") }}
     - {{ compiler("c") }}
-    - {{ compiler("cxx") }}
     - cmake
     - make                               # [unix]
     - pkg-config                         # [unix]
-    - {{ cdt('xorg-x11-proto-devel') }}  # [linux]
-    - {{ cdt('libx11-devel') }}          # [linux]
-    - {{ cdt('libxext-devel') }}         # [linux]
-    - {{ cdt('libxrender-devel') }}      # [linux]
-    - {{ cdt('mesa-libgl-devel') }}      # [linux]
-    - {{ cdt('mesa-libegl-devel') }}     # [linux]
-    - {{ cdt('mesa-dri-drivers') }}      # [linux]
-    - {{ cdt('libxau-devel') }}          # [linux]
-    - {{ cdt('alsa-lib-devel') }}        # [linux]
-    - {{ cdt('gtk2-devel') }}            # [linux]
-    - {{ cdt('gtkmm24-devel') }}         # [linux]
-    - {{ cdt('libdrm-devel') }}          # [linux]
-    - {{ cdt('libxcomposite-devel') }}   # [linux]
-    - {{ cdt('libxcursor-devel') }}      # [linux]
-    - {{ cdt('libxi-devel') }}           # [linux]
-    - {{ cdt('libxrandr-devel') }}       # [linux]
-    - {{ cdt('pciutils-devel') }}        # [linux]
-    - {{ cdt('libxscrnsaver-devel') }}   # [linux]
-    - {{ cdt('libxtst-devel') }}         # [linux]
-    - {{ cdt('libselinux-devel') }}      # [linux]
-    - {{ cdt('libxdamage') }}            # [linux]
-    - {{ cdt('libxdamage-devel') }}      # [linux]
-    - {{ cdt('libxfixes') }}             # [linux]
-    - {{ cdt('libxfixes-devel') }}       # [linux]
-    - {{ cdt('libxxf86vm') }}            # [linux]
-    - {{ cdt('libxrandr') }}             # [linux]
-    - {{ cdt('alsa-lib') }}              # [linux]
   host:
+    - libgl-devel                    # [linux]
     - libglu                         # [linux]
     - xorg-libx11                    # [linux]
-    - xorg-libxext                   # [linux]
+    - xorg-xorgproto                 # [linux]
   run:
+    # you need the libglu headers at runtime, but not at compile time...
     - libglu                         # [linux]
     - xorg-libx11                    # [linux]
     - xorg-libxext                   # [linux]
@@ -64,20 +36,20 @@ requirements:
 # Tests require visual context not present on CIs
 test:
   requires:
-    - {{ compiler("c") }}
+    # Not sure why we need cxx...
     - {{ compiler("cxx") }}
+    - {{ compiler("c") }}
     - cmake
     - make                           # [unix]
-    - {{ cdt('libselinux') }}        # [linux]
-    - {{ cdt('libxcb') }}            # [linux]
-    - {{ cdt('libxdamage') }}        # [linux]
-    - {{ cdt('libxfixes') }}         # [linux]
-    - {{ cdt('libxxf86vm') }}        # [linux]
-    - {{ cdt('mesa-libgl-devel') }}  # [linux]
-    - {{ cdt('mesa-dri-drivers') }}  # [linux]
+    - libgl-devel                    # [linux]
   commands:
     - test -f $PREFIX/include/GL/glew.h            # [unix]
     - if not exist %LIBRARY_INC%\GL\glew.h exit 1  # [win]
+    # These executables fail with a non-0 return because there is no visual context available in CI
+    - which visualinfo   # [unix]
+    - which glewinfo     # [unix]
+    - where visualinfo   # [win]
+    - where glewinfo     # [win]
 
 about:
   home: http://glew.sourceforge.net/
@@ -90,9 +62,10 @@ about:
     which OpenGL extensions are supported on the target platform. OpenGL core and extension
     functionality is exposed in a single header file.
   doc_url: http://glew.sourceforge.net/basic.html
-  dev_url: {{ dev_url }}
+  dev_url: https://github.com/nigels-com/glew
 
 extra:
   recipe-maintainers:
     - dschreij
     - edisongustavo
+    - hmaarrfk
