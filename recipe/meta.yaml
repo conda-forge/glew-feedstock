@@ -22,7 +22,7 @@ requirements:
   build:
     - {{ stdlib("c") }}
     - {{ compiler("c") }}
-    - {{ compiler("cxx") }}
+    # - {{ compiler("cxx") }}
     - cmake
     - make                               # [unix]
     - pkg-config                         # [unix]
@@ -30,19 +30,20 @@ requirements:
     - libgl-devel                    # [linux]
     - libglu                         # [linux]
     - xorg-libx11                    # [linux]
-    - xorg-libxext                   # [linux]
     - xorg-xorgproto                 # [linux]
-    - libxcb                         # [linux]
-    - xorg-libxfixes                 # [linux]
-    - xorg-libxxf86vm                # [linux]
-    - xorg-libxdamage                # [linux]
-    - xorg-libxrandr                 # [linux]
-    - xorg-libxrender                # [linux]
-    - xorg-libxau                    # [linux]
-    - xorg-libxcomposite             # [linux]
-    - xorg-libxcursor                # [linux]
-    - xorg-libxi                     # [linux]
+    # - libxcb                         # [linux]
+    # - xorg-libxau                    # [linux]
+    # - xorg-libxfixes                 # [linux]
+    # - xorg-libxxf86vm                # [linux]
+    # - xorg-libxrandr                 # [linux]
+    # - xorg-libxdamage                # [linux]
+    # - xorg-libxi                     # [linux]
+    # - xorg-libxrender                # [linux]
+    # - xorg-libxext                   # [linux]
+    # - xorg-libxcomposite             # [linux]
+    # - xorg-libxcursor                # [linux]
   run:
+    # you need the libglu headers at runtime, but not at compile time...
     - libglu                         # [linux]
     - xorg-libx11                    # [linux]
     - xorg-libxext                   # [linux]
@@ -54,9 +55,15 @@ test:
     - {{ compiler("cxx") }}
     - cmake
     - make                           # [unix]
+    - libgl-devel                    # [linux]
   commands:
     - test -f $PREFIX/include/GL/glew.h            # [unix]
     - if not exist %LIBRARY_INC%\GL\glew.h exit 1  # [win]
+    # These executables fail with a non-0 return because there is no visual context available in CI
+    - which visualinfo   # [unix]
+    - which glewinfo     # [unix]
+    - where visualinfo   # [win]
+    - where glewinfo     # [win]
 
 about:
   home: http://glew.sourceforge.net/
