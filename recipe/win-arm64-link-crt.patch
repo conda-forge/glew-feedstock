@@ -1,0 +1,21 @@
+Description: Link glew32.dll against the regular MSVC CRT on win-arm64.
+ Upstream links the DLL with -nodefaultlib -noentry plus libvcruntime.lib and
+ msvcrt.lib. On ARM64 that pulls per_thread_data.obj out of libvcruntime.lib,
+ which needs abort/calloc/free from the UCRT and fails with LNK2019/LNK1120.
+ Dropping these flags links the default CRT instead (same fix as vcpkg's
+ fix-LNK2019.patch).
+Upstream Status: Not submitted
+
+--- a/build/cmake/CMakeLists.txt
++++ b/build/cmake/CMakeLists.txt
+@@ -128,10 +128,6 @@
+   # kill security checks which are dependent on stdlib
+   target_compile_options (glew PRIVATE -GS-)
+   target_compile_options (glew_s PRIVATE -GS-)
+-  # remove stdlib dependency
+-  target_link_libraries (glew LINK_PRIVATE -nodefaultlib -noentry)
+-  target_link_libraries (glew LINK_PRIVATE libvcruntime.lib)
+-  target_link_libraries (glew LINK_PRIVATE msvcrt.lib )
+   string(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_C_FLAGS_DEBUG ${CMAKE_C_FLAGS_DEBUG})
+ elseif (WIN32 AND ((CMAKE_C_COMPILER_ID MATCHES "GNU") OR (CMAKE_C_COMPILER_ID MATCHES "Clang")))
+   # remove stdlib dependency on windows with GCC and Clang (for similar reasons

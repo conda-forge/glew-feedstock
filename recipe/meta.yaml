@@ -9,9 +9,10 @@ source:
   sha256: b261a06dfc8b970e0a1974488530e58dd2390acf68acb05b45235cd6fb17a086
   patches:
     - CMakeLists.patch  # [win and vc<14]
+    - win-arm64-link-crt.patch  # [win and arm64]
 
 build:
-  number: 0
+  number: 1
   run_exports:
     - {{ pin_subpackage('glew', max_pin='x.x') }}
 
